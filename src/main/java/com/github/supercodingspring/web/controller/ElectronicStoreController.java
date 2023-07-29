@@ -1,10 +1,11 @@
 package com.github.supercodingspring.web.controller;
 
+import com.github.supercodingspring.repository.ElectronicStoreItemRepository;
+import com.github.supercodingspring.repository.ItemEntity;
 import com.github.supercodingspring.web.dto.Item;
 import com.github.supercodingspring.web.dto.ItemBody;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,72 +13,70 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class ElectronicStoreController {
 
-    private static int serialItemId = 1;
-    private List<Item> items = Arrays.asList(new Item(String.valueOf(serialItemId++), "Apple iPhone 12 Pro Max", "Smartphone", 1490000, "A14 Bionic", "512GB"),
-                                             new Item(String.valueOf(serialItemId++), "Samsung Galaxy S21 Ultra", "Smartphone", 1690000, "Exynos 2100", "256GB"),
-                                             new Item(String.valueOf(serialItemId++), "Google Pixel 6 Pro", "Smartphone", 1290000, "Google Tensor", "128GB"),
-                                             new Item(String.valueOf(serialItemId++), "Dell XPS 15", "Laptop", 2290000, "Intel Core i9", "1TB SSD"),
-                                             new Item(String.valueOf(serialItemId++), "Sony Alpha 7 III", "Mirrorless Camera", 2590000, "BIONZ X", "No internal storage"),
-                                             new Item(String.valueOf(serialItemId++), "Microsoft Xbox Series X", "Gaming Console", 499000, "Custom AMD Zen 2", "1TB SSD"));
+    private ElectronicStoreItemRepository electronicStoreItemRepository;
+
+    public ElectronicStoreController(ElectronicStoreItemRepository electronicStoreItemRepository) {
+        this.electronicStoreItemRepository = electronicStoreItemRepository;
+    }
 
     @PostMapping("/items")
-    public String registerItem(@RequestBody ItemBody itemBody) {
-        Item item = new Item(String.valueOf(serialItemId++), itemBody);
-        items.add(item);
-        return item.getId();
+    public Integer registerItem(@RequestBody ItemBody itemBody) {
+        ItemEntity itemEntity = new ItemEntity(null, itemBody.getName(), itemBody.getType(),
+                                               itemBody.getPrice(), itemBody.getSpec().getCpu(), itemBody.getSpec().getCapacity());
+        Integer id = electronicStoreItemRepository.saveItem(itemEntity);
+        return id;
     }
 
     @GetMapping("/items")
     public List<Item> getAllItems() {
+        List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
+        List<Item> items = itemEntities.stream()
+                                       .map(Item::new)
+                                       .collect(Collectors.toList());
         return items;
     }
 
     @GetMapping("/items/{id}")
     public Item getItemById(@PathVariable String id) {
-        Item itemFounded = items.stream()
-            .filter((item) -> item.getId().equals(id))
-            .findFirst()
-            .orElseThrow();
-        return itemFounded;
+        Integer idInt = Integer.parseInt(id);
+        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt);
+        Item item = new Item(itemEntity);
+        return item;
     }
 
     @GetMapping("/items-query")
     public Item getItemByQueryId(@RequestParam("id") String id) {
-        Item itemFounded = items.stream()
-            .filter((item) -> item.getId().equals(id))
-            .findFirst()
-            .orElseThrow();
-        return itemFounded;
+        Integer idInt = Integer.parseInt(id);
+        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt);
+        Item item = new Item(itemEntity);
+        return item;
     }
 
     @GetMapping("/items-queries")
     public List<Item> getItemByQueryId(@RequestParam("id") List<String> ids) {
-        List<Item> foundItems = items.stream()
-            .filter((item) -> ids.contains(item.getId()))
-            .collect(Collectors.toList());
-        return foundItems;
+        List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
+        List<Item> items = itemEntities.stream()
+                                       .map(Item::new)
+                                       .filter((item -> ids.contains(item.getId())))
+                                       .collect(Collectors.toList());
+        return items;
     }
 
     @DeleteMapping("/items/{id}")
     public String deleteItemById(@PathVariable String id) {
-        items = items.stream()
-            .filter((item) -> !item.getId().equals(id))
-            .collect(Collectors.toList());
+        electronicStoreItemRepository.deleteItem(Integer.parseInt(id));
         return "Object with id =" + id + "has been deleted";
     }
 
     @PutMapping("/items/{id}")
     public Item updateItem(@PathVariable String id, @RequestBody ItemBody itemBody) {
-        Item itemFounded = items.stream()
-            .filter((item) -> item.getId().equals(id))
-            .findFirst()
-            .orElseThrow();
+        ItemEntity itemEntity = new ItemEntity(Integer.valueOf(id), itemBody.getName(), itemBody.getType(), itemBody.getPrice(),
+                                               itemBody.getSpec().getCpu(), itemBody.getSpec().getCapacity());
 
-        items.remove(itemFounded);
+        ItemEntity itemEntityUpdated = electronicStoreItemRepository.updateItemEntity(Integer.valueOf(id), itemEntity);
 
-        Item newItem = new Item(id, itemBody);
-        items.add(newItem);
+        Item itemUpdated = new Item(itemEntityUpdated);
 
-        return newItem;
+        return itemUpdated;
     }
 }
