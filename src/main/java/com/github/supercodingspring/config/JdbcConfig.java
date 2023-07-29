@@ -13,19 +13,34 @@ import javax.sql.DataSource;
 public class JdbcConfig {
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource1(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUsername("root");
         dataSource.setPassword("12341234");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/chapter_95?useUnicode=true&characterEncoding=UTF-8");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/chapter_96?useUnicode=true&characterEncoding=UTF-8");
         return dataSource;
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() { return new JdbcTemplate(dataSource()); }
+    public DataSource dataSource2(){
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUsername("root");
+        dataSource.setPassword("12341234");
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/chapter_97?useUnicode=true&characterEncoding=UTF-8");
+        return dataSource;
+    }
 
     @Bean
-    public PlatformTransactionManager transactionManager1() { return new DataSourceTransactionManager(dataSource()); }
+    public JdbcTemplate jdbcTemplate1() { return new JdbcTemplate(dataSource1()); }
 
+    @Bean
+    public JdbcTemplate jdbcTemplate2() { return new JdbcTemplate(dataSource2()); }
+
+    @Bean(name = "tm1")
+    public PlatformTransactionManager transactionManager1() { return new DataSourceTransactionManager(dataSource1()); }
+
+    @Bean(name = "tm2")
+    public PlatformTransactionManager transactionManager2() { return new DataSourceTransactionManager(dataSource2()); }
 }

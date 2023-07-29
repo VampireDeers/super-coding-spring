@@ -1,4 +1,4 @@
-package com.github.supercodingspring.web.dto;
+package com.github.supercodingspring.web.dto.items;
 
 public class BuyOrder {
     private Integer itemId;
