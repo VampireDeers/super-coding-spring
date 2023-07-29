@@ -61,4 +61,10 @@ public class ElectronicStoreItemJdbcDao implements ElectronicStoreItemRepository
         return jdbcTemplate.queryForObject("SELECT * FROM item WHERE id = ?", itemEntityRowMapper, idInt);
     }
 
+    @Override
+    public void updateItemStock(Integer itemId, Integer stock) {
+        jdbcTemplate.update("UPDATE item " +
+                            " SET stock = ? " +
+                            " WHERE id = ? ", stock, itemId);
+    }
 }

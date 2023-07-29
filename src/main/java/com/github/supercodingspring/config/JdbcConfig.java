@@ -25,4 +25,7 @@ public class JdbcConfig {
     @Bean
     public JdbcTemplate jdbcTemplate() { return new JdbcTemplate(dataSource()); }
 
+    @Bean
+    public PlatformTransactionManager transactionManager1() { return new DataSourceTransactionManager(dataSource()); }
+
 }
