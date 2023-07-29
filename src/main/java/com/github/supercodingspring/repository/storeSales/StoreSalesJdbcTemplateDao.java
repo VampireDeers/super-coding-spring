@@ -10,7 +10,7 @@ public class StoreSalesJdbcTemplateDao implements StoreSalesRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    public StoreSalesJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
+    public StoreSalesJdbcTemplateDao(@Qualifier("jdbcTemplate1") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
