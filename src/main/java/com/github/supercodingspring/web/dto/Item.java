@@ -1,5 +1,7 @@
 package com.github.supercodingspring.web.dto;
 
+import com.github.supercodingspring.repository.ItemEntity;
+
 import java.util.Objects;
 
 public class Item {
@@ -27,6 +29,14 @@ public class Item {
         this.type = type;
         this.price = price;
         this.spec = new Spec(cpu, capacity);
+    }
+
+    public Item(ItemEntity itemEntity){
+        this.id = itemEntity.getId().toString();
+        this.type = itemEntity.getType();
+        this.price = itemEntity.getPrice();
+        this.name = itemEntity.getName();
+        this.spec = new Spec(itemEntity.getCpu(), itemEntity.getCapacity());
     }
 
     public String getId() {
