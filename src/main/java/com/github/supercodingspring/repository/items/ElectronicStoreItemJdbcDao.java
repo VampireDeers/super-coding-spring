@@ -1,4 +1,4 @@
-package com.github.supercodingspring.repository;
+package com.github.supercodingspring.repository.items;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
