@@ -13,4 +13,5 @@ public interface ElectronicStoreItemRepository {
     void deleteItem(int parseInt);
 
     ItemEntity findItemById(Integer idInt);
+    void updateItemStock(Integer itemId, Integer i);
 }
