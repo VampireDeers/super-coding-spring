@@ -16,27 +16,25 @@ public class AirlineTicketJdbcTemplateDao implements AirlineTicketRepository {
     }
 
     static RowMapper<AirlineTicket> airlineTicketRowMapper = (((rs, rowNum) ->
-            new AirlineTicket(
-                    rs.getInt("ticket_id"),
-                    rs.getString("ticket_type"),
-                    rs.getNString("departure_loc"),
-                    rs.getNString("arrival_loc"),
-                    rs.getDate("departure_at"),
-                    rs.getDate("return_at"),
-                    rs.getDouble("tax"),
-                    rs.getDouble("total_price")
-            )
-    ));
+            new AirlineTicket.AirlineTicketBuilder()
+                    .ticketId(rs.getInt("ticket_id"))
+                    .ticketType(rs.getString("ticket_type"))
+                    .departureLocation(rs.getNString("departure_loc"))
+                    .arrivalLocation(rs.getNString("arrival_loc"))
+                    .departureAt(rs.getDate("departure_at"))
+                    .returnAt(rs.getDate("return_at"))
+                    .tax(rs.getDouble("tax"))
+                    .totalPrice(rs.getDouble("total_price"))
+                    .build()));
     static RowMapper<AirlineTicketAndFlightInfo> airlineTicketAndFlightInfoRowMapper
             = (((rs, rowNum) ->
-                new AirlineTicketAndFlightInfo(
-                        rs.getInt("A.ticket_id"),
-                        rs.getDouble("F.flight_price"),
-                        rs.getDouble("F.charge"),
-                        rs.getDouble("A.tax"),
-                        rs.getDouble("A.total_price")
-                )
-            ));
+                new AirlineTicketAndFlightInfo.AirlineTicketAndFlightInfoBuilder()
+                        .ticketId(rs.getInt("A.ticket_id"))
+                        .price(rs.getDouble("F.flight_price"))
+                        .charge(rs.getDouble("F.charge"))
+                        .tax(rs.getDouble("A.tax"))
+                        .totalPrice(rs.getDouble("A.total_price"))
+                        .build()));
 
     @Override
     public List<AirlineTicket> findAllAirlineTicketsWithPlaceAndTicketType(String likePlace, String ticketType) {

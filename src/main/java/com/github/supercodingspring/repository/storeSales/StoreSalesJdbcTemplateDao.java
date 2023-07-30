@@ -8,19 +8,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StoreSalesJdbcTemplateDao implements StoreSalesRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public StoreSalesJdbcTemplateDao(@Qualifier("jdbcTemplate1") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     static RowMapper<StoreSales> storeSalesRowMapper = (((rs, rowNum) ->
-                new StoreSales(
-                        rs.getInt("id"),
-                        rs.getNString("store_name"),
-                        rs.getInt("amount")
-                )
-            ));
+                new StoreSales.StoreSalesBuilder()
+                        .id(rs.getInt("id"))
+                        .storeName(rs.getNString("store_name"))
+                        .amount(rs.getInt("amount"))
+                        .build()));
 
     @Override
     public StoreSales findStoreSalesById(Integer storeId) {

@@ -1,22 +1,14 @@
 package com.github.supercodingspring.web.dto.items;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Spec {
     private String cpu;
     private String capacity;
-
-    public Spec() {
-    }
-
-    public Spec(String cpu, String capacity) {
-        this.cpu = cpu;
-        this.capacity = capacity;
-    }
-
-    public String getCpu() {
-        return cpu;
-    }
-
-    public String getCapacity() {
-        return capacity;
-    }
 }

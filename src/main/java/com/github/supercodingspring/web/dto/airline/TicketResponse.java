@@ -1,18 +1,14 @@
 package com.github.supercodingspring.web.dto.airline;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class TicketResponse {
     private List<Ticket> tickets;
-
-    public TicketResponse(List<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
-    public TicketResponse() {
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
 }

@@ -15,12 +15,12 @@ public class UserJdbcTemplateDao implements UserRepository {
     }
 
     static RowMapper<UserEntity> userEntityRowMapper = ((rs, rowNums) ->
-            new UserEntity(
-                    rs.getInt("user_id"),
-                    rs.getNString("user_name"),
-                    rs.getNString("like_travel_place"),
-                    rs.getNString("phone_num")
-            ));
+            new UserEntity.UserEntityBuilder()
+                    .userId(rs.getInt("user_id"))
+                    .userName(rs.getNString("user_name"))
+                    .likeTravelPlace(rs.getNString("like_travel_place"))
+                    .phoneNum(rs.getNString("phone_num"))
+                    .build());
 
 
     @Override

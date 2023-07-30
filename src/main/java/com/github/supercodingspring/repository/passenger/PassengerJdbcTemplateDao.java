@@ -15,11 +15,11 @@ public class PassengerJdbcTemplateDao implements PassengerReposiotry {
     }
 
     static RowMapper<Passenger> passengerRowMapper = (((rs, rowNum) ->
-            new Passenger(
-                    rs.getInt("passenger_id"),
-                    rs.getInt("user_id"),
-                    rs.getNString("passport_num"))
-    ));
+            new Passenger.PassengerBuilder()
+                    .passengerId(rs.getInt("passenger_id"))
+                    .userId(rs.getInt("user_id"))
+                    .passportNum(rs.getNString("passport_num"))
+                    .build()));
     @Override
     public Passenger findPassengerByUserId(Integer userId) {
         return template.queryForObject("SELECT * FROM passenger WHERE user_id = ?", passengerRowMapper, userId);
