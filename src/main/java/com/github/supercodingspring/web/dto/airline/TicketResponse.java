@@ -1,5 +1,6 @@
 package com.github.supercodingspring.web.dto.airline;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class TicketResponse {
-    private List<Ticket> tickets;
+    @ApiModelProperty(name = "tickets", value = "tickets 들") private List<Ticket> tickets;
 }

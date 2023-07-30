@@ -1,0 +1,11 @@
+2023-07-30 22:08:46.251 [main] [34mINFO [0;39m [36mc.g.s.SuperCodingSpringApplication[0;39m - Starting SuperCodingSpringApplication using Java 11.0.10 on AL01745134.local with PID 60644 (/Users/user/Desktop/super_coding/Spring/super-coding-spring/build/classes/java/main started by user in /Users/user/Desktop/super_coding/Spring/super-coding-spring)
+2023-07-30 22:08:46.254 [main] [34mINFO [0;39m [36mc.g.s.SuperCodingSpringApplication[0;39m - The following 1 profile is active: "dev"
+2023-07-30 22:08:47.197 [main] [34mINFO [0;39m [36mo.s.b.w.e.tomcat.TomcatWebServer[0;39m - Tomcat initialized with port(s): 8080 (http)
+2023-07-30 22:08:47.204 [main] [34mINFO [0;39m [36mo.a.coyote.http11.Http11NioProtocol[0;39m - Initializing ProtocolHandler ["http-nio-8080"]
+2023-07-30 22:08:47.205 [main] [34mINFO [0;39m [36mo.a.catalina.core.StandardService[0;39m - Starting service [Tomcat]
+2023-07-30 22:08:47.205 [main] [34mINFO [0;39m [36mo.a.catalina.core.StandardEngine[0;39m - Starting Servlet engine: [Apache Tomcat/9.0.78]
+2023-07-30 22:08:47.275 [main] [34mINFO [0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/][0;39m - Initializing Spring embedded WebApplicationContext
+2023-07-30 22:08:47.290 [main] [34mINFO [0;39m [36mo.s.b.w.s.c.ServletWebServerApplicationContext[0;39m - Root WebApplicationContext: initialization completed in 997 ms
+2023-07-30 22:08:47.723 [main] [34mINFO [0;39m [36mo.a.coyote.http11.Http11NioProtocol[0;39m - Starting ProtocolHandler ["http-nio-8080"]
+2023-07-30 22:08:47.742 [main] [34mINFO [0;39m [36mo.s.b.w.e.tomcat.TomcatWebServer[0;39m - Tomcat started on port(s): 8080 (http) with context path ''
+2023-07-30 22:08:47.753 [main] [34mINFO [0;39m [36mc.g.s.SuperCodingSpringApplication[0;39m - Started SuperCodingSpringApplication in 1.955 seconds (JVM running for 2.603)

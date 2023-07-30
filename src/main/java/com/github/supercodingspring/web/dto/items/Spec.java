@@ -1,15 +1,14 @@
 package com.github.supercodingspring.web.dto.items;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Spec {
-    private String cpu;
-    private String capacity;
+    @ApiModelProperty(name = "cpu", value = "Item CPU", example = "Google Tensor") private String cpu;
+    @ApiModelProperty(name = "capacity", value = "Item 용량 Spec", example = "25G") private String capacity;
 }

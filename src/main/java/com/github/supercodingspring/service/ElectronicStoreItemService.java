@@ -9,6 +9,8 @@ import com.github.supercodingspring.web.dto.items.BuyOrder;
 import com.github.supercodingspring.web.dto.items.Item;
 import com.github.supercodingspring.web.dto.items.ItemBody;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ElectronicStoreItemService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ElectronicStoreItemRepository electronicStoreItemRepository;
     private final StoreSalesRepository storeSalesRepository;
 
@@ -85,7 +88,10 @@ public class ElectronicStoreItemService {
         // Item 재고 감소
         electronicStoreItemRepository.updateItemStock(itemId, itemEntity.getStock() - successBuyItemNums);
 
-        if (successBuyItemNums == 4) throw new RuntimeException("4개를 구매하는건 허락하지않습니다.");
+        if (successBuyItemNums == 4) {
+            logger.error("4개를 구매하는 건 허락하지않습니다.");
+            throw new RuntimeException("4개를 구매하는건 허락하지않습니다.");
+        }
 
         // 매장 매상 추가
         StoreSales storeSales = storeSalesRepository.findStoreSalesById(itemEntity.getStoreId());
