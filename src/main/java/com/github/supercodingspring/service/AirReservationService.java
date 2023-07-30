@@ -9,6 +9,7 @@ import com.github.supercodingspring.repository.reservations.Reservation;
 import com.github.supercodingspring.repository.reservations.ReservationRepository;
 import com.github.supercodingspring.repository.users.UserEntity;
 import com.github.supercodingspring.repository.users.UserRepository;
+import com.github.supercodingspring.service.mapper.TicketMapper;
 import com.github.supercodingspring.web.dto.airline.ReservationRequest;
 import com.github.supercodingspring.web.dto.airline.ReservationResult;
 import com.github.supercodingspring.web.dto.airline.Ticket;
@@ -39,7 +40,7 @@ public class AirReservationService {
         List<AirlineTicket> airlineTickets
                 = airlineTicketRepository.findAllAirlineTicketsWithPlaceAndTicketType(likePlace, ticketType);
 
-        List<Ticket> tickets = airlineTickets.stream().map(Ticket::new).collect(Collectors.toList());
+        List<Ticket> tickets = airlineTickets.stream().map(TicketMapper.INSTANCE::airlineTicketToTicket).collect(Collectors.toList());
         return tickets;
     }
 

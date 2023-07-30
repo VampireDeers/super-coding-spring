@@ -8,5 +8,4 @@ import lombok.NoArgsConstructor;
 public class BuyOrder {
     private Integer itemId;
     private Integer itemNums;
-
 }

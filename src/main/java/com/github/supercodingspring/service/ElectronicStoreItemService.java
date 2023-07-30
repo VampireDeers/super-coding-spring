@@ -4,6 +4,7 @@ import com.github.supercodingspring.repository.items.ElectronicStoreItemReposito
 import com.github.supercodingspring.repository.items.ItemEntity;
 import com.github.supercodingspring.repository.storeSales.StoreSales;
 import com.github.supercodingspring.repository.storeSales.StoreSalesRepository;
+import com.github.supercodingspring.service.mapper.ItemMapper;
 import com.github.supercodingspring.web.dto.items.BuyOrder;
 import com.github.supercodingspring.web.dto.items.Item;
 import com.github.supercodingspring.web.dto.items.ItemBody;
@@ -22,26 +23,25 @@ public class ElectronicStoreItemService {
 
     public List<Item> findAllItem() {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
-        return itemEntities.stream().map(Item::new).collect(Collectors.toList());
+        return itemEntities.stream().map(ItemMapper.INSTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
     public Integer savaItem(ItemBody itemBody) {
-        ItemEntity itemEntity = new ItemEntity(null, itemBody.getName(), itemBody.getType(),
-                                               itemBody.getPrice(), itemBody.getSpec().getCpu(), itemBody.getSpec().getCapacity());
+        ItemEntity itemEntity = ItemMapper.INSTANCE.idAndItemBodyToItemEntity(null, itemBody);
         return electronicStoreItemRepository.saveItem(itemEntity);
     }
 
     public Item findItemById(String id) {
         Integer idInt = Integer.parseInt(id);
         ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt);
-        Item item = new Item(itemEntity);
+        Item item = ItemMapper.INSTANCE.itemEntityToItem(itemEntity);
         return item;
     }
 
     public List<Item> findItemsByIds(List<String> ids) {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
         return itemEntities.stream()
-                                       .map(Item::new)
+                                       .map(ItemMapper.INSTANCE::itemEntityToItem)
                                        .filter((item -> ids.contains(item.getId())))
                                        .collect(Collectors.toList());
     }
@@ -53,13 +53,10 @@ public class ElectronicStoreItemService {
 
     public Item updateItem(String id, ItemBody itemBody) {
         Integer idInt = Integer.valueOf(id);
-        ItemEntity itemEntity = new ItemEntity(idInt, itemBody.getName(),
-                                               itemBody.getType(), itemBody.getPrice(),
-                                               itemBody.getSpec().getCpu(), itemBody.getSpec().getCapacity());
-
+        ItemEntity itemEntity = ItemMapper.INSTANCE.idAndItemBodyToItemEntity(null, itemBody);
         ItemEntity itemEntityUpdated = electronicStoreItemRepository.updateItemEntity(idInt, itemEntity);
 
-        return new Item(itemEntityUpdated);
+        return ItemMapper.INSTANCE.itemEntityToItem(itemEntityUpdated);
     }
 
     @Transactional(transactionManager = "tm1")

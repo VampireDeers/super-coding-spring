@@ -28,4 +28,5 @@ public class ItemEntity {
         this.cpu = cpu;
         this.capacity = capacity;
     }
+
 }
