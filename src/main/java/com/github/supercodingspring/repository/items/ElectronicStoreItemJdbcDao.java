@@ -19,6 +19,8 @@ public class ElectronicStoreItemJdbcDao implements ElectronicStoreItemRepository
                         .id(rs.getInt("id"))
                         .name(rs.getNString("name"))
                         .type(rs.getNString("type"))
+                        .storeId(rs.getInt("store_id"))
+                        .stock(rs.getInt("stock"))
                         .cpu(rs.getNString("cpu"))
                         .price(rs.getInt("price"))
                         .capacity(rs.getNString("capacity"))
