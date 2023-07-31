@@ -1,6 +1,7 @@
 package com.github.supercodingspring.repository.items;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ElectronicStoreItemRepository {
 
@@ -12,6 +13,7 @@ public interface ElectronicStoreItemRepository {
 
     void deleteItem(int parseInt);
 
-    ItemEntity findItemById(Integer idInt);
+    Optional<ItemEntity> findItemById(Integer idInt);
+    Optional<ItemEntity> findItemByName(String name);
     void updateItemStock(Integer itemId, Integer i);
 }

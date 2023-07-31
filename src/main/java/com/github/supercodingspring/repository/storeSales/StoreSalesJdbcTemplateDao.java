@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class StoreSalesJdbcTemplateDao implements StoreSalesRepository {
 
@@ -22,8 +24,12 @@ public class StoreSalesJdbcTemplateDao implements StoreSalesRepository {
                         .build()));
 
     @Override
-    public StoreSales findStoreSalesById(Integer storeId) {
-        return jdbcTemplate.queryForObject("SELECT * from store_sales WHERE id = ?", storeSalesRowMapper, storeId);
+    public Optional<StoreSales> findStoreSalesById(Integer storeId) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * from store_sales WHERE id = ?", storeSalesRowMapper, storeId));
+        } catch (Exception e){
+            return Optional.empty();
+        }
     }
 
     @Override

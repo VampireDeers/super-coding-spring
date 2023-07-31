@@ -4,6 +4,8 @@ import com.github.supercodingspring.repository.items.ElectronicStoreItemReposito
 import com.github.supercodingspring.repository.items.ItemEntity;
 import com.github.supercodingspring.repository.storeSales.StoreSales;
 import com.github.supercodingspring.repository.storeSales.StoreSalesRepository;
+import com.github.supercodingspring.service.exceptions.NotAcceptException;
+import com.github.supercodingspring.service.exceptions.NotFoundException;
 import com.github.supercodingspring.service.mapper.ItemMapper;
 import com.github.supercodingspring.web.dto.items.BuyOrder;
 import com.github.supercodingspring.web.dto.items.Item;
@@ -26,23 +28,36 @@ public class ElectronicStoreItemService {
 
     public List<Item> findAllItem() {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
+        if (itemEntities.isEmpty()) throw new NotFoundException("아무 Items 들을 찾을 수 없습니다.");
+
         return itemEntities.stream().map(ItemMapper.INSTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
     public Integer savaItem(ItemBody itemBody) {
         ItemEntity itemEntity = ItemMapper.INSTANCE.idAndItemBodyToItemEntity(null, itemBody);
-        return electronicStoreItemRepository.saveItem(itemEntity);
+        try {
+            electronicStoreItemRepository.saveItem(itemEntity);
+        } catch (RuntimeException exception){
+            throw new NotAcceptException("Item을 저장하는 도중에 Error 가 발생하였습니다.");
+        }
+
+        ItemEntity itemEntityCreated = electronicStoreItemRepository.findItemByName(itemEntity.getName())
+                                                                    .orElseThrow(() -> new NotFoundException("해당 이름의 Item을 찾을 수 없습니다."));
+        return itemEntityCreated.getId();
     }
 
     public Item findItemById(String id) {
         Integer idInt = Integer.parseInt(id);
-        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt);
+        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt)
+                                                             .orElseThrow(() -> new NotFoundException("해당 ID: " + idInt + "의 Item을 찾을 수 없습니다."));
         Item item = ItemMapper.INSTANCE.itemEntityToItem(itemEntity);
         return item;
     }
 
     public List<Item> findItemsByIds(List<String> ids) {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
+        if (itemEntities.isEmpty()) throw new NotFoundException("아무 Items 들을 찾을 수 없습니다.");
+
         return itemEntities.stream()
                                        .map(ItemMapper.INSTANCE::itemEntityToItem)
                                        .filter((item -> ids.contains(item.getId())))
@@ -74,10 +89,11 @@ public class ElectronicStoreItemService {
         Integer itemId = buyOrder.getItemId();
         Integer itemNums = buyOrder.getItemNums();
 
-        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(itemId);
+        ItemEntity itemEntity = electronicStoreItemRepository.findItemById(itemId)
+                                                             .orElseThrow(() -> new NotFoundException("해당 이름의 Item을 찾을 수 없습니다."));
 
-        if (itemEntity.getStoreId() == null ) throw new RuntimeException("매장을 찾을 수 없습니다.");
-        if (itemEntity.getStock() <= 0) throw new RuntimeException("상품의 재고가 없습니다.");
+        if (itemEntity.getStoreId() == null ) throw new NotFoundException("매장을 찾을 수 없습니다.");
+        if (itemEntity.getStock() <= 0) throw new NotAcceptException("상품의 재고가 없습니다.");
 
         Integer successBuyItemNums;
         if ( itemNums >= itemEntity.getStock() ) successBuyItemNums = itemEntity.getStock();
@@ -90,11 +106,13 @@ public class ElectronicStoreItemService {
 
         if (successBuyItemNums == 4) {
             logger.error("4개를 구매하는 건 허락하지않습니다.");
-            throw new RuntimeException("4개를 구매하는건 허락하지않습니다.");
+            throw new NotAcceptException("4개를 구매하는건 허락하지않습니다.");
         }
 
         // 매장 매상 추가
-        StoreSales storeSales = storeSalesRepository.findStoreSalesById(itemEntity.getStoreId());
+        StoreSales storeSales = storeSalesRepository.findStoreSalesById(itemEntity.getStoreId())
+                                                    .orElseThrow(() -> new NotFoundException("요청하신 StoreId : " + itemEntity.getStoreId() + "에 해당하는 StoreSale 없습니다.") );
+
         storeSalesRepository.updateSalesAmount(itemEntity.getStoreId(), storeSales.getAmount() + totalPrice);
 
         return successBuyItemNums;

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -37,12 +38,14 @@ public class ElectronicStoreItemJdbcDao implements ElectronicStoreItemRepository
 
     @Override
     public Integer saveItem(ItemEntity itemEntity) {
-        jdbcTemplate.update("INSERT INTO item(name, type, price, cpu, capacity) VALUES (?, ?, ?, ?, ?)",
-                            itemEntity.getName(), itemEntity.getType(), itemEntity.getPrice(),
-                            itemEntity.getCpu(), itemEntity.getCapacity());
-
-        ItemEntity itemEntityFound = jdbcTemplate.queryForObject("SELECT * FROM item WHERE name = ?", itemEntityRowMapper, itemEntity.getName());
-        return itemEntityFound.getId();
+        try {
+            return jdbcTemplate.update("INSERT INTO item(name, type, price, cpu, capacity) VALUES (?, ?, ?, ?, ?)",
+                                       itemEntity.getName(), itemEntity.getType(), itemEntity.getPrice(),
+                                       itemEntity.getCpu(), itemEntity.getCapacity());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -62,8 +65,21 @@ public class ElectronicStoreItemJdbcDao implements ElectronicStoreItemRepository
     }
 
     @Override
-    public ItemEntity findItemById(Integer idInt) {
-        return jdbcTemplate.queryForObject("SELECT * FROM item WHERE id = ?", itemEntityRowMapper, idInt);
+    public Optional<ItemEntity> findItemById(Integer idInt) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM item WHERE id = ?", itemEntityRowMapper, idInt));
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<ItemEntity> findItemByName(String name) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM item WHERE name = ?", itemEntityRowMapper, name));
+        } catch (Exception e){
+            return Optional.empty();
+        }
     }
 
     @Override
