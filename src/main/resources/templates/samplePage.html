@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sample Page</title>
+</head>
+<body>
+<h1>Sample Data</h1>
+<div>
+
+    <!-- Thymeleaf를 사용하여 데이터를 data 렌더링 -->
+    <div th:each="data: ${dataList}" >
+        <p th:text="${data.id + ': ' + data.name}"> </p>
+    </div>
+    <!-- 데이터가 없는 경우 처리 -->
+    <div th:if="${dataList.size() == 0}">
+        <p> NO Data Available.</p>
+    </div>
+
+</div>
+</body>
+</html>
