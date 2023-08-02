@@ -20,7 +20,7 @@ public interface ItemMapper {
 
     @Mapping(target = "cpu", source = "itemBody.spec.cpu")
     @Mapping(target = "capacity", source = "itemBody.spec.capacity")
-    @Mapping(target = "storeId", ignore = true)
+    @Mapping(target = "storeSales", ignore = true)
     @Mapping(target = "stock", expression = "java(0)")
     ItemEntity idAndItemBodyToItemEntity(Integer id, ItemBody itemBody);
 }

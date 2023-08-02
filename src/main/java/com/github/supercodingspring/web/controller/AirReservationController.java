@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +36,15 @@ public class AirReservationController {
     @PostMapping("/reservations")
     public ReservationResult makeReservation(@RequestBody ReservationRequest reservationRequest){
             return airReservationService.makeReservation(reservationRequest);
+    }
+
+    @ApiOperation("userId의 예약한 항공편과 수수료 총합")
+    @GetMapping("/users-sum-price")
+    public Double findUserFlightSumPrice(
+            @ApiParam(name = "user-Id", value = "유저 ID", example = "1") @RequestParam("user-id") Integer userId
+    )
+    {
+        Double sum = airReservationService.findUserFlightSumPrice(userId);
+        return sum;
     }
 }
