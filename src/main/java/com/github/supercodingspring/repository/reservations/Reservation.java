@@ -1,5 +1,7 @@
 package com.github.supercodingspring.repository.reservations;
 
+import com.github.supercodingspring.repository.airlineTicket.AirlineTicket;
+import com.github.supercodingspring.repository.passenger.Passenger;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -18,10 +20,13 @@ public class Reservation {
     @Id @Column(name = "reservation_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reservationId;
 
-    @Column(name = "passenger_id")
-    private Integer passengerId;
-    @Column(name = "airline_ticket_id")
-    private Integer airlineTicketId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "passenger_id")
+    private Passenger passenger;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "airline_ticket_id")
+    private AirlineTicket airlineTicket;
 
     @Column(name = "reservation_status", length = 10)
     private String reservationStatus;
@@ -29,9 +34,9 @@ public class Reservation {
     @Column(name = "reserve_at")
     private LocalDateTime reserveAt;
 
-    public Reservation(Integer passengerId, Integer airlineTicketId) {
-        this.passengerId = passengerId;
-        this.airlineTicketId = airlineTicketId;
+    public Reservation(Passenger passenger, AirlineTicket airlineTicket) {
+        this.passenger = passenger;
+        this.airlineTicket = airlineTicket;
         this.reservationStatus = "대기";
         this.reserveAt = LocalDateTime.now();
     }

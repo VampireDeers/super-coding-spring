@@ -1,5 +1,6 @@
 package com.github.supercodingspring.repository.flight;
 
+import com.github.supercodingspring.repository.airlineTicket.AirlineTicket;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,9 @@ public class Flight {
     @Id @Column(name = "flight_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer flightId;
 
-    @Column(name = "ticket_id")
-    private Integer ticket;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id", nullable = true)
+    private AirlineTicket airlineTicket;
 
     @Column(name = "departure_at")
     private LocalDateTime departAt;

@@ -1,5 +1,6 @@
 package com.github.supercodingspring.repository.users;
 
+import com.github.supercodingspring.repository.passenger.Passenger;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -22,6 +23,9 @@ public class UserEntity {
     private String likeTravelPlace;
     @Column(name = "phone_num", length = 30)
     private String phoneNum;
+
+    @OneToOne(mappedBy = "user")
+    private Passenger passenger;
 
     @Override
     public boolean equals(Object o) {
