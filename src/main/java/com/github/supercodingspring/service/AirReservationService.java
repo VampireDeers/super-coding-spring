@@ -2,12 +2,16 @@ package com.github.supercodingspring.service;
 
 import com.github.supercodingspring.repository.airlineTicket.AirlineTicket;
 import com.github.supercodingspring.repository.airlineTicket.AirlineTicketAndFlightInfo;
+import com.github.supercodingspring.repository.airlineTicket.AirlineTicketJpaRepository;
 import com.github.supercodingspring.repository.airlineTicket.AirlineTicketRepository;
 import com.github.supercodingspring.repository.passenger.Passenger;
+import com.github.supercodingspring.repository.passenger.PassengerJpaRepository;
 import com.github.supercodingspring.repository.passenger.PassengerReposiotry;
 import com.github.supercodingspring.repository.reservations.Reservation;
+import com.github.supercodingspring.repository.reservations.ReservationJpaRepository;
 import com.github.supercodingspring.repository.reservations.ReservationRepository;
 import com.github.supercodingspring.repository.users.UserEntity;
+import com.github.supercodingspring.repository.users.UserJpaRepository;
 import com.github.supercodingspring.repository.users.UserRepository;
 import com.github.supercodingspring.service.exceptions.InvalidValueException;
 import com.github.supercodingspring.service.exceptions.NotAcceptException;
@@ -30,11 +34,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AirReservationService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final AirlineTicketJpaRepository airlineTicketJpaRepository;
     private final AirlineTicketRepository airlineTicketRepository;
 
-    private final PassengerReposiotry passengerReposiotry;
-    private final ReservationRepository reservationRepository;
+
+    private final PassengerJpaRepository passengerJpaRepository;
+    private final ReservationJpaRepository reservationJpaRepository;
 
     public List<Ticket> findUserFavoritePlaceTickets(Integer userId, String ticketType) {
         // 1. 유저를 userId 로 가져와서, 선호하는 여행지 도출
@@ -47,11 +53,11 @@ public class AirReservationService {
         if ( !ticketTypeSet.contains(ticketType) )
             throw new InvalidValueException("해당 TicketType " + ticketType + "은 지원하지 않습니다.");
 
-        UserEntity userEntity = userRepository.findUserById(userId).orElseThrow(() -> new NotFoundException("해당 ID: " + userId +" 유저를 찾을 수 없습니다."));
+        UserEntity userEntity = userJpaRepository.findById(userId).orElseThrow(() -> new NotFoundException("해당 ID: " + userId +" 유저를 찾을 수 없습니다."));
         String likePlace = userEntity.getLikeTravelPlace();
 
         List<AirlineTicket> airlineTickets
-                = airlineTicketRepository.findAllAirlineTicketsWithPlaceAndTicketType(likePlace, ticketType);
+                = airlineTicketJpaRepository.findAirlineTicketsByArrivalLocationAndTicketType(likePlace, ticketType);
 
         if (airlineTickets.isEmpty())
             throw new NotFoundException("해당 likePlace: " + likePlace + " 와 TicketType: " + ticketType + "에 해당하는 항공권 찾을 수 없습니다.");
@@ -60,7 +66,7 @@ public class AirReservationService {
         return tickets;
     }
 
-    @Transactional(transactionManager = "tm2")
+    @Transactional(transactionManager = "tmJpa2")
     public ReservationResult makeReservation(ReservationRequest reservationRequest) {
         // 1. Reservation Repository, Passenger Repository, Join table ( flight/airline_ticket ),
 
@@ -69,7 +75,7 @@ public class AirReservationService {
         Integer airlineTicketId= reservationRequest.getAirlineTicketId();
 
         // 1. Passenger I
-        Passenger passenger = passengerReposiotry.findPassengerByUserId(userId)
+        Passenger passenger = passengerJpaRepository.findPassengerByUserId(userId)
                                                  .orElseThrow(() -> new NotFoundException("요청하신 userId " + userId + "에 해당하는 Passenger를 찾을 수 없습니다."));
         Integer passengerId= passenger.getPassengerId();
 
@@ -86,7 +92,8 @@ public class AirReservationService {
         // 3. reservation 생성
         Reservation reservation = new Reservation(passengerId, airlineTicketId);
         try {
-            isSuccess = reservationRepository.saveReservation(reservation);
+            reservationJpaRepository.save(reservation);
+            isSuccess = true;
         } catch (RuntimeException e){
             throw new NotAcceptException("Reservation이 등록되는 과정이 거부되었습니다.");
         }
