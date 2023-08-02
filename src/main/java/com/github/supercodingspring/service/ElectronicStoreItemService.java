@@ -96,8 +96,9 @@ public class ElectronicStoreItemService {
 
         ItemEntity itemEntity = electronicStoreItemJpaRepository.findById(itemId)
                                                              .orElseThrow(() -> new NotFoundException("해당 이름의 Item을 찾을 수 없습니다."));
+        log.info("=============== 동작 확인 로그 1 ========================");
 
-        if (itemEntity.getStoreId() == null ) throw new NotFoundException("매장을 찾을 수 없습니다.");
+        if (itemEntity.getStoreSales().isEmpty()) throw new NotFoundException("매장을 찾을 수 없습니다.");
         if (itemEntity.getStock() <= 0) throw new NotAcceptException("상품의 재고가 없습니다.");
 
         Integer successBuyItemNums;
@@ -114,9 +115,11 @@ public class ElectronicStoreItemService {
             throw new NotAcceptException("4개를 구매하는건 허락하지않습니다.");
         }
 
+        log.info("=============== 동작 확인 로그 2 ========================");
+
         // 매장 매상 추가
-        StoreSales storeSales = storeSalesJpaRepository.findById(itemEntity.getStoreId())
-                                                    .orElseThrow(() -> new NotFoundException("요청하신 StoreId : " + itemEntity.getStoreId() + "에 해당하는 StoreSale 없습니다.") );
+        StoreSales storeSales = itemEntity.getStoreSales()
+                                          .orElseThrow(() -> new NotFoundException("요청하신 Store 해당하는 StoreSale 없습니다.") );
 
         storeSales.setAmount(storeSales.getAmount() + totalPrice);
         return successBuyItemNums;
