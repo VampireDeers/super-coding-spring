@@ -26,6 +26,7 @@ public interface TicketMapper {
 
     @Named("convert")
     static String localDateTimeToString(LocalDateTime localDateTime){
-        return localDateTime.format(formatter);
+        if(localDateTime != null) return localDateTime.format(formatter);
+        else return null;
     }
 }

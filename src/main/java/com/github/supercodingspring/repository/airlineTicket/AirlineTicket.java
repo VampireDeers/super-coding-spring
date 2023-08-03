@@ -12,6 +12,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @ToString
 @NoArgsConstructor
@@ -41,18 +42,6 @@ public class AirlineTicket {
     @OneToMany(mappedBy = "airlineTicket")
     private List<Flight> flightList;
 
-
-    @Builder
-    public AirlineTicket(Integer ticketId, String ticketType, String departureLocation, String arrivalLocation, Date departureAt, Date returnAt, Double tax, Double totalPrice) {
-        this.ticketId = ticketId;
-        this.ticketType = ticketType;
-        this.departureLocation = departureLocation;
-        this.arrivalLocation = arrivalLocation;
-        this.departureAt = departureAt.toLocalDate().atStartOfDay();
-        this.returnAt = returnAt.toLocalDate().atStartOfDay();
-        this.tax = tax;
-        this.totalPrice = totalPrice;
-    }
 
     @Override
     public boolean equals(Object o) {
