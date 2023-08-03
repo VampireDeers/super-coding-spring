@@ -16,16 +16,19 @@ import java.util.Objects;
 @Builder
 @Entity
 @Table(name = "reservation")
+@ToString
 public class Reservation {
     @Id @Column(name = "reservation_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reservationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "passenger_id")
+    @ToString.Exclude
     private Passenger passenger;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_ticket_id")
+    @ToString.Exclude
     private AirlineTicket airlineTicket;
 
     @Column(name = "reservation_status", length = 10)

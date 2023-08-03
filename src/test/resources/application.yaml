@@ -1,6 +1,12 @@
 server:
   port: 8080
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/chapter_97
+    username: root
+    password: 12341234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
