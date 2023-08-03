@@ -1,10 +1,7 @@
 package com.github.supercodingspring.repository.flight;
 
 import com.github.supercodingspring.repository.airlineTicket.AirlineTicket;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @Entity
+@AllArgsConstructor
 @Table(name = "flight")
 public class Flight {
     @Id @Column(name = "flight_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
