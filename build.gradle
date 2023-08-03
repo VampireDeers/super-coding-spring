@@ -31,6 +31,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // Test Lombok
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     // Mapstruct
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
@@ -39,6 +43,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     runtimeOnly 'com.h2database:h2'
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
