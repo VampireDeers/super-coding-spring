@@ -3,3 +3,7 @@ server:
 
 logging:
   config: classpath:logback-spring-dev.xml
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
