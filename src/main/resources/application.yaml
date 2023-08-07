@@ -16,3 +16,6 @@ datasource2:
   password: ${DATABASE_PASSWORD}
   url: jdbc:mysql://localhost:3306/chapter_97?useUnicode=true&characterEncoding=UTF-8
   driver-class-name: com.mysql.cj.jdbc.Driver
+
+jwt:
+  secret-key-source: ${JWT_SECRET_KEY}
