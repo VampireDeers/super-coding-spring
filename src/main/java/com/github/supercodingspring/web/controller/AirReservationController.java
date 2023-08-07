@@ -1,5 +1,6 @@
 package com.github.supercodingspring.web.controller;
 
+import com.github.supercodingspring.repository.userDetails.CustomUserDetails;
 import com.github.supercodingspring.service.AirReservationService;
 import com.github.supercodingspring.web.dto.airline.ReservationRequest;
 import com.github.supercodingspring.web.dto.airline.ReservationResult;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +27,10 @@ public class AirReservationController {
     @ApiOperation("선호하는 ticket 탐색")
     @GetMapping("/tickets")
     public TicketResponse findAirlineTickets(
-            @ApiParam(name = "user-Id", value = "유저 ID", example = "1") @RequestParam("user-Id") Integer userId,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @ApiParam(name = "airline-ticket-type", value = "항공권 타입", example = "왕복|편도") @RequestParam("airline-ticket-type") String ticketType )
     {
+            Integer userId = customUserDetails.getUserId();
             List<Ticket> tickets = airReservationService.findUserFavoritePlaceTickets(userId, ticketType);
             return new TicketResponse(tickets);
     }
@@ -41,9 +44,10 @@ public class AirReservationController {
     @ApiOperation("userId의 예약한 항공편과 수수료 총합")
     @GetMapping("/users-sum-price")
     public Double findUserFlightSumPrice(
-            @ApiParam(name = "user-Id", value = "유저 ID", example = "1") @RequestParam("user-id") Integer userId
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
     )
     {
+        Integer userId = customUserDetails.getUserId();
         Double sum = airReservationService.findUserFlightSumPrice(userId);
         return sum;
     }
