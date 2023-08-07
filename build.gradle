@@ -57,6 +57,8 @@ dependencies {
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 tasks.named('test') {
