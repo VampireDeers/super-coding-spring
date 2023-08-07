@@ -12,4 +12,5 @@ public interface UserPrincipalRepository extends JpaRepository<UserPrincipal, In
     @Query("SELECT up FROM UserPrincipal up JOIN FETCH up.userPrincipalRoles upr JOIN FETCH upr.roles WHERE up.email = :email ")
     Optional<UserPrincipal> findByEmailFetchJoin(String email);
 
+    boolean existsByEmail(String email);
 }
