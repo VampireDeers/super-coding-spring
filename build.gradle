@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     runtimeOnly 'mysql:mysql-connector-java:8.0.26'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -63,4 +64,8 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.named('bootJar'){
+    mainClass = 'com.github.supercodingspring.SuperCodingSpringApplication'
 }

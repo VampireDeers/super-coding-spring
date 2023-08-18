@@ -1,2 +1,14 @@
-server:
-  port: 8100
+spring:
+  config:
+    activate:
+      on-profile: prod
+logging:
+  config: classpath:logback-spring-prod.xml
+
+datasource:
+  driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://database-1.cqffg3qxhuny.ap-northeast-2.rds.amazonaws.com:3306/items?useUnicode=true&characterEncoding=UTF-8
+
+datasource2:
+  driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://database-1.cqffg3qxhuny.ap-northeast-2.rds.amazonaws.com:3306/airline_ticket?useUnicode=true&characterEncoding=UTF-8
